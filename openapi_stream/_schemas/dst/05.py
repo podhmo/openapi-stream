@@ -48,7 +48,7 @@ class Schema(Visitor):
 
         # additionalProperties
         for k, v in d.items():
-            if if k in self._properties:
+            if k in self._properties:
                 continue
             for rx, visitor in self._pattern_properties_regexes:
                 m = rx.search(rx)

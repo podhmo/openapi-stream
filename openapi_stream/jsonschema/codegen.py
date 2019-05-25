@@ -1,6 +1,8 @@
 import typing as t
+import re
 import json
 import logging
+from collections import defaultdict
 from prestring.python import Module
 from prestring.naming import pascalcase
 from openapi_stream import Event
@@ -29,9 +31,30 @@ class _LazyName:
 # todo: rename python reserved word
 
 
+class _PythonNameNormalizer:
+    def __init__(self):
+        self.unpython_name_map = defaultdict(lambda: f"x{len(self.unpython_name_map)}")
+        self.unpython_rx = re.compile(r"^\d+|[^a-zA-Z0-9_]+")
+
+    def __call__(self, name):
+        if self.unpython_rx.search(name) is not None:
+            name = self.unpython_rx.sub(self._replace, name)
+        return name
+
+    def _replace(self, match: re.Match):
+        return self.unpython_name_map[match.group()]
+
+
 class Helper:
+    def __init__(self):
+        self.to_python_name = _PythonNameNormalizer()
+
     def classname(self, ev: Event, *, name: str = None) -> str:
-        return pascalcase(name or ev.get_annotated(names.annotations.name))
+        retname = name or ev.get_annotated(names.annotations.name)
+        return pascalcase(self.to_python_name(retname))
+
+    def methodname(self, name: str) -> str:
+        return self.to_python_name(name)
 
     def create_submodule(self, m) -> Module:
         sm = m.submodule()
@@ -58,8 +81,9 @@ class Helper:
 
 
 class NameManager:  # todo: rename
-    def __init__(self):
+    def __init__(self, *, helper: Helper):
         self.visitors = {}
+        self.helper = helper
 
     def register_visitor_name(self, ev: Event, clsname):
         self.visitors[ev.uid] = clsname
@@ -70,8 +94,13 @@ class NameManager:  # todo: rename
     def create_lazy_visitor_name(self, uid: str) -> _LazyName:
         def to_str(uid: str = uid):
             # name = self.visitors[uid]
-            name = self.visitors.get(uid) or "<missing>"
-            logger.debug("resolve clasname: %s -> %s", uid, name)
+            name = self.visitors.get(uid)
+            if name is None:
+                logger.warn("missing, resolve clasname: %s -> %s", uid, name)
+                name = "<missing>"
+            else:
+                name = self.helper.methodname(name)
+                logger.debug("resolve clasname: %s -> %s", uid, name)
             return name
 
         return _LazyName(to_str)
@@ -110,8 +139,9 @@ class Generator:
 
         self.logging = Logging(m, enable=logging_enable)
         self.emitter = Emitter()
+
         self.helper = Helper()
-        self.name_manager = NameManager()
+        self.name_manager = NameManager(helper=self.helper)
 
         # xxx:
         self._end_of_private_visit_method_conts = {}  # classname -> m.submodule()
@@ -301,7 +331,7 @@ class Generator:
                     _on_continue = _on_continue_with_warning  # noqa
 
                 with m.for_("k, v in d.items()"):
-                    with m.if_("if k in self._properties"):
+                    with m.if_("k in self._properties"):
                         m.stmt("continue")
                     if self.helper.has_pattern_properties(ev):
                         with m.for_("rx, visitor in self._pattern_properties_regexes"):
@@ -327,7 +357,7 @@ class Generator:
     ) -> None:
         m.import_area.from_("openapi_stream", "runtime")
         m.stmt("@reify")
-        with m.def_(name, "self"):
+        with m.def_(self.helper.methodname(name), "self"):
             lazy_link_name = self.name_manager.create_lazy_visitor_name(uid)
             m.stmt(
                 "return runtime.resolve_visitor({name!r}, cls={prefix}{cls}, logger=logger)",

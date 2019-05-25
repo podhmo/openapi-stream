@@ -69,7 +69,7 @@ class Schema(Visitor):
         def _pattern_properties_regexes(self):
             import re
             return [
-                (re.compile('^[a-zA-Z0-9\\.\\-_]+$'), resolve_visitor('^[a-zA-Z0-9\\.\\-_]+$', cls=_PatternProperties/^[aZAZ09\.\]+$, logger=logger)),
+                (re.compile('^[a-zA-Z0-9\\.\\-_]+$'), resolve_visitor('^[a-zA-Z0-9\\.\\-_]+$', cls=_PatternPropertiesx0ax1zAx1Z0x19x2X3, logger=logger)),
             ]
 
         @reify
@@ -92,7 +92,7 @@ class Schema(Visitor):
                         ctx.run(k, visitor.visit, v)
 
         # anonymous definition for 'patternProperties/^[a-zA-Z0-9\\.\\-_]+$' (TODO: nodename)
-        class _PatternProperties/^[aZAZ09\.\]+$(Visitor):
+        class _PatternPropertiesx0ax1zAx1Z0x19x2X3(Visitor):
             _schema_type = 'oneOf'
             _roles = ['combine_type', 'field_of_something', 'has_expanded']
             _uid = '/examples/03one-of.yaml#/definitions/Schema/properties/patternProperties/^[a-zA-Z0-9\\.\\-_]+$'
@@ -100,7 +100,7 @@ class Schema(Visitor):
 
             @reify
             def node(self):
-                return runtime.resolve_node('.nodes._PatternProperties/^[aZAZ09\\.\\]+$', here=__name__, logger=logger)
+                return runtime.resolve_node('.nodes._PatternPropertiesx0ax1zAx1Z0x19x2X3', here=__name__, logger=logger)
 
             def visit(self, ctx: Context, d: dict):
                 # for oneOf (xxx: _case is module global)
@@ -111,7 +111,7 @@ class Schema(Visitor):
                 raise ValueError('unexpected value')  # todo gentle message
 
             def _visit(self, ctx: Context, d: dict):
-                logger.debug("visit: %s", '_PatternProperties/^[aZAZ09\\.\\]+$')
+                logger.debug("visit: %s", '_PatternPropertiesx0ax1zAx1Z0x19x2X3')
                 if self.node is not None:
                     self.node.attach(ctx, d, self)
 
@@ -125,8 +125,8 @@ class Schema(Visitor):
 
 
         @reify
-        def patternProperties/^[a-zA-Z0-9\.\-_]+$(self):
-            return runtime.resolve_visitor('patternProperties/^[a-zA-Z0-9\\.\\-_]+$', cls=_Properties._PatternProperties/^[aZAZ09\.\]+$, logger=logger)
+        def patternPropertiesx0ax1zAx1Z0x19x2_x3(self):
+            return runtime.resolve_visitor('patternProperties/^[a-zA-Z0-9\\.\\-_]+$', cls=_Properties._PatternPropertiesx0ax1zAx1Z0x19x2X3, logger=logger)
 
 
     @reify
@@ -154,7 +154,7 @@ class Schema(Visitor):
 
             # additionalProperties
             for k, v in d.items():
-                if if k in self._properties:
+                if k in self._properties:
                     continue
                 ctx.run(k, self.additional_properties.visit, v)
 
@@ -279,7 +279,7 @@ class Toplevel(Visitor):
         def _pattern_properties_regexes(self):
             import re
             return [
-                (re.compile('^[a-zA-Z0-9\\.\\-_]+$'), resolve_visitor('^[a-zA-Z0-9\\.\\-_]+$', cls=_PatternProperties/^[aZAZ09\.\]+$, logger=logger)),
+                (re.compile('^[a-zA-Z0-9\\.\\-_]+$'), resolve_visitor('^[a-zA-Z0-9\\.\\-_]+$', cls=_PatternPropertiesx0ax1zAx1Z0x19x2X3, logger=logger)),
             ]
 
         @reify
@@ -302,7 +302,7 @@ class Toplevel(Visitor):
                         ctx.run(k, visitor.visit, v)
 
         # anonymous definition for 'patternProperties/^[a-zA-Z0-9\\.\\-_]+$' (TODO: nodename)
-        class _PatternProperties/^[aZAZ09\.\]+$(Visitor):
+        class _PatternPropertiesx0ax1zAx1Z0x19x2X3(Visitor):
             _schema_type = 'oneOf'
             _roles = ['combine_type', 'has_expanded', 'toplevel_properties']
             _uid = '/examples/03one-of.yaml#/properties/patternProperties/^[a-zA-Z0-9\\.\\-_]+$'
@@ -310,7 +310,7 @@ class Toplevel(Visitor):
 
             @reify
             def node(self):
-                return runtime.resolve_node('.nodes._PatternProperties/^[aZAZ09\\.\\]+$', here=__name__, logger=logger)
+                return runtime.resolve_node('.nodes._PatternPropertiesx0ax1zAx1Z0x19x2X3', here=__name__, logger=logger)
 
             def visit(self, ctx: Context, d: dict):
                 # for oneOf (xxx: _case is module global)
@@ -321,7 +321,7 @@ class Toplevel(Visitor):
                 raise ValueError('unexpected value')  # todo gentle message
 
             def _visit(self, ctx: Context, d: dict):
-                logger.debug("visit: %s", '_PatternProperties/^[aZAZ09\\.\\]+$')
+                logger.debug("visit: %s", '_PatternPropertiesx0ax1zAx1Z0x19x2X3')
                 if self.node is not None:
                     self.node.attach(ctx, d, self)
 
@@ -335,8 +335,8 @@ class Toplevel(Visitor):
 
 
         @reify
-        def patternProperties/^[a-zA-Z0-9\.\-_]+$(self):
-            return runtime.resolve_visitor('patternProperties/^[a-zA-Z0-9\\.\\-_]+$', cls=_Properties._PatternProperties/^[aZAZ09\.\]+$, logger=logger)
+        def patternPropertiesx0ax1zAx1Z0x19x2_x3(self):
+            return runtime.resolve_visitor('patternProperties/^[a-zA-Z0-9\\.\\-_]+$', cls=_Properties._PatternPropertiesx0ax1zAx1Z0x19x2X3, logger=logger)
 
 
     @reify

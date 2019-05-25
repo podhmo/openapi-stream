@@ -1,10 +1,11 @@
 # CMD ?= python -m openapi_stream.jsonschema
 CMD ?= python -m openapi_stream.jsonschema.codegen
 
-# OPTS ?= --log=DEBUG
-default: TARGET?=main
-default:
-	$(MAKE) ${TARGET}
+OPTS ?= --log=DEBUG
+# default: TARGET?=main
+# default:
+# 	$(MAKE) ${TARGET}
+default: 00 01 02 03 04 05 06 07
 
 main:
 	@$(CMD) separated/main.yaml ${OPTS}
