@@ -1,5 +1,20 @@
+import typing as t
 import sys
 from importlib import import_module
+from .context import Context
+from .interfaces import Visitor
+
+
+def run_pattern_properties(
+    ctx: Context,
+    d: dict,
+    regex_and_visitor_pairs: t.List[t.Tuple[t.Pattern[t.AnyStr, Visitor]]],
+) -> None:
+    for rx, visitor in regex_and_visitor_pairs:
+        for k, v in d.items():
+            m = rx.search(rx)
+            if m is not None and visitor is not None:
+                ctx.run(k, visitor.visit, v)
 
 
 def resolve_visitor(name, *, cls, logger):

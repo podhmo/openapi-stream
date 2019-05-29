@@ -319,12 +319,10 @@ class Generator:
 
             if self.helper.has_pattern_properties(ev):
                 m.sep()
-                m.stmt("# patternProperties")
-                with m.for_("rx, visitor in self._pattern_properties_regexes"):
-                    with m.for_("k, v in d.items()"):
-                        m.stmt("m = rx.search(rx)")
-                        with m.if_("m is not None and visitor is not None"):
-                            m.stmt("ctx.run(k, visitor.visit, v)")
+                m.import_area.from_("openapi_stream", "runtime")
+                m.stmt(
+                    "runtime.run_pattern_properties(ctx, d, self._pattern_properties_regexes)"
+                )
             if self.helper.has_additional_properties(ev):
                 m.sep()
                 m.stmt("# additionalProperties")
