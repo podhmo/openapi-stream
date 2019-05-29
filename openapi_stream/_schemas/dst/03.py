@@ -69,7 +69,7 @@ class Schema(Visitor):
         def _pattern_properties_regexes(self):
             import re
             return [
-                (re.compile('^[a-zA-Z0-9\\.\\-_]+$'), resolve_visitor('^[a-zA-Z0-9\\.\\-_]+$', cls=Schema._Properties._PatternPropertiesx1ax2zAx2Z0x29x3X4, logger=logger)),
+                (re.compile('^[a-zA-Z0-9\\.\\-_]+$'), runtime.resolve_visitor('^[a-zA-Z0-9\\.\\-_]+$', cls=Schema._Properties._PatternPropertiesx1ax2zAx2Z0x29x3X4, logger=logger)),
             ]
 
         @reify
@@ -302,7 +302,7 @@ class Toplevel(Visitor):
         def _pattern_properties_regexes(self):
             import re
             return [
-                (re.compile('^[a-zA-Z0-9\\.\\-_]+$'), resolve_visitor('^[a-zA-Z0-9\\.\\-_]+$', cls=Toplevel._Properties._PatternPropertiesx1ax2zAx2Z0x29x3X4, logger=logger)),
+                (re.compile('^[a-zA-Z0-9\\.\\-_]+$'), runtime.resolve_visitor('^[a-zA-Z0-9\\.\\-_]+$', cls=Toplevel._Properties._PatternPropertiesx1ax2zAx2Z0x29x3X4, logger=logger)),
             ]
 
         @reify
@@ -376,7 +376,7 @@ class Toplevel(Visitor):
         @reify
         def _pattern_properties_regexes(self):
             return [
-                (re.compile('^[a-zA-Z0-9\\.\\-_]+$'), resolve_visitor('^[a-zA-Z0-9\\.\\-_]+$', cls=Schema, logger=logger)),
+                (re.compile('^[a-zA-Z0-9\\.\\-_]+$'), runtime.resolve_visitor('^[a-zA-Z0-9\\.\\-_]+$', cls=Schema, logger=logger)),
             ]
 
         @reify

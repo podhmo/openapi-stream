@@ -241,7 +241,7 @@ class Generator:
 
                     lazy_name = self.name_manager.create_lazy_visitor_name(uid)
                     m.stmt(
-                        """(re.compile({k!r}), resolve_visitor({k!r}, cls={cls}, logger=logger)),""",
+                        """(re.compile({k!r}), runtime.resolve_visitor({k!r}, cls={cls}, logger=logger)),""",
                         k=k,
                         cls=lazy_name,
                     )
