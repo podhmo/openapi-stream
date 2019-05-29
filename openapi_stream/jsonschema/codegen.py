@@ -233,7 +233,7 @@ class Generator:
     def _gen_pattern_properties_regexes(self, ev: Event, *, m) -> None:
         m.stmt("@reify")
         with m.def_("_pattern_properties_regexes", "self"):
-            m.import_("re")
+            m.import_area.import_("re")
             m.stmt("return [")
             with m.scope():
                 for k, uid in ev.get_annotated(

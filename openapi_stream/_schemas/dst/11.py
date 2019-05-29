@@ -3,6 +3,7 @@ from logging import getLogger
 from openapi_stream.interfaces import (
     Visitor
 )
+import re
 from openapi_stream import (
     runtime
 )
@@ -22,7 +23,6 @@ class Toplevel(Visitor):
 
     @reify
     def _pattern_properties_regexes(self):
-        import re
         return [
             (re.compile('^x-'), runtime.resolve_visitor('^x-', cls=Toplevel._PatternPropertiesx0xx1, logger=logger)),
         ]

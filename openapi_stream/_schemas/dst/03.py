@@ -8,6 +8,7 @@ from openapi_stream import (
 )
 from dictknife.langhelpers import reify
 from openapi_stream.context import Context
+import re
 
 
 logger = getLogger(__name__)  # noqa
@@ -67,7 +68,6 @@ class Schema(Visitor):
 
         @reify
         def _pattern_properties_regexes(self):
-            import re
             return [
                 (re.compile('^[a-zA-Z0-9\\.\\-_]+$'), runtime.resolve_visitor('^[a-zA-Z0-9\\.\\-_]+$', cls=Schema._Properties._PatternPropertiesx1ax2zAx2Z0x29x3X4, logger=logger)),
             ]
@@ -300,7 +300,6 @@ class Toplevel(Visitor):
 
         @reify
         def _pattern_properties_regexes(self):
-            import re
             return [
                 (re.compile('^[a-zA-Z0-9\\.\\-_]+$'), runtime.resolve_visitor('^[a-zA-Z0-9\\.\\-_]+$', cls=Toplevel._Properties._PatternPropertiesx1ax2zAx2Z0x29x3X4, logger=logger)),
             ]
