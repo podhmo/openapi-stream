@@ -240,7 +240,7 @@ class Generator:
                     names.annotations.pattern_properties_links
                 ):
                     if self.helper.is_link_of_anonymous_definition(uid):
-                        uid = f"{ev.uid}/patternProperties/{k}"  # xxx
+                        uid = f"{ev.uid.rstrip('/')}/patternProperties/{k}"  # xxx
 
                     lazy_name = self.name_manager.create_lazy_visitor_name(uid)
                     m.stmt(
@@ -313,7 +313,8 @@ class Generator:
                     uid = f"{ev.uid}/{name}"
                 with m.if_(f"{name!r} in d"):
                     m.stmt(
-                        f"ctx.run({name!r}, self.{self.helper.methodname(name)}.visit, d[{name!r}])", name=name
+                        f"ctx.run({name!r}, self.{self.helper.methodname(name)}.visit, d[{name!r}])",
+                        name=name,
                     )
 
             if self.helper.has_pattern_properties(ev):
@@ -385,7 +386,6 @@ class Generator:
     def _gen_xxx_of_visitors(self, ev: Event, *, m) -> None:
         for i, uid in self.helper.iterate_xxx_of_links(ev):
             name = f"{ev.name}{i}"
-            prefix = ""
             if self.helper.is_link_of_anonymous_definition(uid):
                 uid = f"{ev.uid}/{ev.name}/{i}"
             self._gen_visitor_property(ev, name=name, uid=uid, m=m)

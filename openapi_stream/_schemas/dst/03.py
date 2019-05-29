@@ -327,7 +327,7 @@ class Toplevel(Visitor):
         # anonymous definition for 'patternProperties/^[a-zA-Z0-9\\.\\-_]+$' (TODO: nodename)
         class _PatternPropertiesx1ax2zAx2Z0x29x3X4(Visitor):
             _schema_type = 'oneOf'
-            _roles = ['combine_type', 'has_expanded', 'toplevel_properties']
+            _roles = ['combine_type', 'field_of_something', 'has_expanded', 'toplevel_properties']
             _uid = '/examples/03one-of.yaml#/properties/patternProperties/^[a-zA-Z0-9\\.\\-_]+$'
             _xxx_of_definitions = [{'$ref': '#/definitions/1'}, {'$ref': '#/definitions/3'}]
 

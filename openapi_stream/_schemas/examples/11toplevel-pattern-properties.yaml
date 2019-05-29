@@ -1,0 +1,10 @@
+additionalProperties: false
+patternProperties:
+  ^x-: {}
+properties:
+  openapi:
+    pattern: ^3\.0\.\d(-.+)?$
+    type: string
+required:
+- openapi
+type: object

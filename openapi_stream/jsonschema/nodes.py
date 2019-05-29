@@ -202,7 +202,8 @@ class SchemaNode(Node):
             annotations[names.annotations.name] = ctx.path[-1]
         elif "definitions" not in ctx.path:
             roles.append(names.roles.toplevel_properties)  # ???
-        elif len(ctx.path) > 2:
+
+        if len(ctx.path) > 2:
             if ctx.path[-2] in _object_attributes or ctx.path[-1] in _object_attributes:
                 roles.append(names.roles.field_of_something)
             if ctx.path[-2] in _combine_types_without_not_type:
