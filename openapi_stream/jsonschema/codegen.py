@@ -103,7 +103,7 @@ class NameManager:  # todo: rename
 
         def to_str(uid: str = uid):
             # name = self.visitor_class_names[uid]
-            name, prefix = (self.visitor_class_names.get(uid) or (None, ""))
+            name, prefix = self.visitor_class_names.get(uid) or (None, "")
             if name is None:
                 logger.warning("missing, resolve clasname: %s -> %s", uid, name)
                 name = "<missing>"
@@ -426,6 +426,7 @@ def main():
                 ev.name in (names.types.object, names.types.array)
                 or names.roles.combine_type in ev.roles
                 or names.roles.child_of_xxx_of in ev.roles
+                or names.roles.field_of_something in ev.roles
             ):
                 uid_and_clsname_pairs = sorted(
                     g.name_manager.iterate_clssname_and_prefix_pairs(),
