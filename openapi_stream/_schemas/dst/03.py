@@ -84,12 +84,7 @@ class Schema(Visitor):
             if self.node is not None:
                 self.node.attach(ctx, d, self)
 
-            # patternProperties
-            for rx, visitor in self._pattern_properties_regexes:
-                for k, v in d.items():
-                    m = rx.search(rx)
-                    if m is not None and visitor is not None:
-                        ctx.run(k, visitor.visit, v)
+            runtime.run_pattern_properties(ctx, d, self._pattern_properties_regexes)
 
         # anonymous definition for 'patternProperties/^[a-zA-Z0-9\\.\\-_]+$' (TODO: nodename)
         class _PatternPropertiesx1ax2zAx2Z0x29x3X4(Visitor):
@@ -316,12 +311,7 @@ class Toplevel(Visitor):
             if self.node is not None:
                 self.node.attach(ctx, d, self)
 
-            # patternProperties
-            for rx, visitor in self._pattern_properties_regexes:
-                for k, v in d.items():
-                    m = rx.search(rx)
-                    if m is not None and visitor is not None:
-                        ctx.run(k, visitor.visit, v)
+            runtime.run_pattern_properties(ctx, d, self._pattern_properties_regexes)
 
         # anonymous definition for 'patternProperties/^[a-zA-Z0-9\\.\\-_]+$' (TODO: nodename)
         class _PatternPropertiesx1ax2zAx2Z0x29x3X4(Visitor):
@@ -390,12 +380,7 @@ class Toplevel(Visitor):
             if self.node is not None:
                 self.node.attach(ctx, d, self)
 
-            # patternProperties
-            for rx, visitor in self._pattern_properties_regexes:
-                for k, v in d.items():
-                    m = rx.search(rx)
-                    if m is not None and visitor is not None:
-                        ctx.run(k, visitor.visit, v)
+            runtime.run_pattern_properties(ctx, d, self._pattern_properties_regexes)
 
 
     @reify

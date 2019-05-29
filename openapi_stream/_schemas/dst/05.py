@@ -39,12 +39,7 @@ class Schema(Visitor):
         if self.node is not None:
             self.node.attach(ctx, d, self)
 
-        # patternProperties
-        for rx, visitor in self._pattern_properties_regexes:
-            for k, v in d.items():
-                m = rx.search(rx)
-                if m is not None and visitor is not None:
-                    ctx.run(k, visitor.visit, v)
+        runtime.run_pattern_properties(ctx, d, self._pattern_properties_regexes)
 
         # additionalProperties
         for k, v in d.items():
@@ -124,12 +119,7 @@ class Points(Visitor):
         if self.node is not None:
             self.node.attach(ctx, d, self)
 
-        # patternProperties
-        for rx, visitor in self._pattern_properties_regexes:
-            for k, v in d.items():
-                m = rx.search(rx)
-                if m is not None and visitor is not None:
-                    ctx.run(k, visitor.visit, v)
+        runtime.run_pattern_properties(ctx, d, self._pattern_properties_regexes)
 
 
 
