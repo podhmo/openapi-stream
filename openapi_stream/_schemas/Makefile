@@ -5,10 +5,10 @@ OPTS ?= --log=DEBUG
 # default: TARGET?=main
 # default:
 # 	$(MAKE) ${TARGET}
-default: 00 01 02 03 04 05 06 07 08 09 10 11
+default: 00 01 02 03 04 05 06 07 08 09 10 11 main
 
 main:
-	@$(CMD) separated/main.yaml ${OPTS}
+	@$(CMD) examples/separated/main.yaml ${OPTS} | tee dst/main.py
 dst:
 	mkdir -p dst
 00: dst
