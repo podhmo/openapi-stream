@@ -5,6 +5,14 @@ from .context import Context
 from .interfaces import Visitor
 
 
+def run_properties(
+    ctx: Context, d: dict, *, visitor_mapping: t.Dict[str, Visitor]
+) -> None:
+    for name, visitor in visitor_mapping.items():
+        if name in d:
+            ctx.run(name, visitor.visit, d[name])
+
+
 def run_pattern_properties(
     ctx: Context,
     d: dict,
