@@ -1,8 +1,9 @@
+import sys  # noqa
 import typing as t
-import sys
 import re
 import json
 import logging
+import keyword
 from collections import defaultdict
 from prestring.python import Module
 from prestring.naming import pascalcase
@@ -55,6 +56,8 @@ class Helper:
         return pascalcase(self.to_python_name(retname))
 
     def methodname(self, name: str) -> str:
+        if keyword.iskeyword(name):
+            name = name + "_"
         return self.to_python_name(name)
 
     def create_submodule(self, m) -> Module:
@@ -310,7 +313,7 @@ class Generator:
                     uid = f"{ev.uid}/{name}"
                 with m.if_(f"{name!r} in d"):
                     m.stmt(
-                        f"ctx.run({name!r}, self.{name}.visit, d[{name!r}])", name=name
+                        f"ctx.run({name!r}, self.{self.helper.methodname(name)}.visit, d[{name!r}])", name=name
                     )
 
             if self.helper.has_pattern_properties(ev):

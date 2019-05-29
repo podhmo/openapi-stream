@@ -1,0 +1,30 @@
+additionalProperties: false
+definitions:
+  Reference:
+    properties:
+      $ref:
+        format: uriref
+        type: string
+    required:
+    - $ref
+    type: object
+  Schema:
+    additionalProperties: false
+    properties:
+      not:
+        oneOf:
+        - $ref: '#/definitions/Schema'
+        - $ref: '#/definitions/Reference'
+      title:
+        type: string
+    type: object
+
+properties:
+  schema:
+    $ref: '#/definitions/Schema'
+  version:
+    pattern: ^\d\.\d\.\d(-.+)?$
+    type: string
+required:
+- openapi
+type: object

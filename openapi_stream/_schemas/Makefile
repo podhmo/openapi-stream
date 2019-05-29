@@ -5,7 +5,7 @@ OPTS ?= --log=DEBUG
 # default: TARGET?=main
 # default:
 # 	$(MAKE) ${TARGET}
-default: 00 01 02 03 04 05 06 07 08 09
+default: 00 01 02 03 04 05 06 07 08 09 10
 
 main:
 	@$(CMD) separated/main.yaml ${OPTS}
@@ -31,6 +31,8 @@ dst:
 	@$(CMD) examples/08*.yaml ${OPTS} | tee dst/08.py
 09: dst
 	@$(CMD) examples/09*.yaml ${OPTS} | tee dst/09.py
+10: dst
+	@$(CMD) examples/10*.yaml ${OPTS} | tee dst/10.py
 
 xxx: TARGET ?= default
 xxx: CMD := python -m openapi_stream.jsonschema
