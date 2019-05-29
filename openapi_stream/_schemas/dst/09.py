@@ -22,7 +22,7 @@ class Schema(Visitor):
     _extra_properties = ['additionalProperties', 'patternProperties']
 
     @reify
-    def _pattern_properties_regexes(self):
+    def _pattern_properties_visitor_pairs(self):
         return [
             (re.compile('^x-'), runtime.resolve_visitor('^x-', cls=Schema._PatternPropertiesx0xx1, logger=logger)),
         ]
@@ -39,13 +39,13 @@ class Schema(Visitor):
         if self.node is not None:
             self.node.attach(ctx, d, self)
 
-        runtime.run_pattern_properties(ctx, d, self._pattern_properties_regexes)
+        runtime.run_pattern_properties(ctx, d, self._pattern_properties_visitor_pairs)
 
         # additionalProperties
         for k, v in d.items():
             if k in self._properties:
                 continue
-            for rx, visitor in self._pattern_properties_regexes:
+            for rx, visitor in self._pattern_properties_visitor_pairs:
                 m = rx.search(rx)
                 if m is not None:
                     continue
@@ -84,6 +84,16 @@ class Toplevel(Visitor):
     _links = ['schema']
 
     @reify
+    def schema(self):
+        return runtime.resolve_visitor('schema', cls=Schema, logger=logger)
+
+    @reify
+    def _properties_visitor_mapping(self):
+        return {
+            'schema': self.schema,
+        }
+
+    @reify
     def node(self):
         return runtime.resolve_node('.nodes.Toplevel', here=__name__, logger=logger)
 
@@ -94,9 +104,5 @@ class Toplevel(Visitor):
         logger.debug("visit: %s", 'Toplevel')
         if self.node is not None:
             self.node.attach(ctx, d, self)
-        if 'schema' in d:
-            ctx.run('schema', self.schema.visit, d['schema'])
 
-    @reify
-    def schema(self):
-        return runtime.resolve_visitor('schema', cls=Schema, logger=logger)
+        runtime.run_properties(ctx, d, visitor_mapping=self._properties_visitor_mapping)

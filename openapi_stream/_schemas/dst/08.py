@@ -40,6 +40,12 @@ class Structure(Visitor):
     _links = ['xof']
 
     @reify
+    def _properties_visitor_mapping(self):
+        return {
+            'xof': self.xof,
+        }
+
+    @reify
     def node(self):
         return runtime.resolve_node('.nodes.Structure', here=__name__, logger=logger)
 
@@ -50,8 +56,8 @@ class Structure(Visitor):
         logger.debug("visit: %s", 'Structure')
         if self.node is not None:
             self.node.attach(ctx, d, self)
-        if 'xof' in d:
-            ctx.run('xof', self.xof.visit, d['xof'])
+
+        runtime.run_properties(ctx, d, visitor_mapping=self._properties_visitor_mapping)
 
     # anonymous definition for 'xof' (TODO: nodename)
     class _Xof(Visitor):
@@ -153,6 +159,16 @@ class Toplevel(Visitor):
     _links = ['structure']
 
     @reify
+    def structure(self):
+        return runtime.resolve_visitor('structure', cls=Structure, logger=logger)
+
+    @reify
+    def _properties_visitor_mapping(self):
+        return {
+            'structure': self.structure,
+        }
+
+    @reify
     def node(self):
         return runtime.resolve_node('.nodes.Toplevel', here=__name__, logger=logger)
 
@@ -163,12 +179,8 @@ class Toplevel(Visitor):
         logger.debug("visit: %s", 'Toplevel')
         if self.node is not None:
             self.node.attach(ctx, d, self)
-        if 'structure' in d:
-            ctx.run('structure', self.structure.visit, d['structure'])
 
-    @reify
-    def structure(self):
-        return runtime.resolve_visitor('structure', cls=Structure, logger=logger)
+        runtime.run_properties(ctx, d, visitor_mapping=self._properties_visitor_mapping)
 
 
 

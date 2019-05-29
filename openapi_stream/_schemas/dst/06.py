@@ -21,6 +21,12 @@ class ComplexStructure(Visitor):
     _links = ['person']
 
     @reify
+    def _properties_visitor_mapping(self):
+        return {
+            'person': self.person,
+        }
+
+    @reify
     def node(self):
         return runtime.resolve_node('.nodes.ComplexStructure', here=__name__, logger=logger)
 
@@ -31,8 +37,8 @@ class ComplexStructure(Visitor):
         logger.debug("visit: %s", 'ComplexStructure')
         if self.node is not None:
             self.node.attach(ctx, d, self)
-        if 'person' in d:
-            ctx.run('person', self.person.visit, d['person'])
+
+        runtime.run_properties(ctx, d, visitor_mapping=self._properties_visitor_mapping)
 
     # anonymous definition for 'person' (TODO: nodename)
     class _Person(Visitor):
@@ -68,6 +74,16 @@ class Toplevel(Visitor):
     _links = ['structure']
 
     @reify
+    def structure(self):
+        return runtime.resolve_visitor('structure', cls=ComplexStructure, logger=logger)
+
+    @reify
+    def _properties_visitor_mapping(self):
+        return {
+            'structure': self.structure,
+        }
+
+    @reify
     def node(self):
         return runtime.resolve_node('.nodes.Toplevel', here=__name__, logger=logger)
 
@@ -78,9 +94,5 @@ class Toplevel(Visitor):
         logger.debug("visit: %s", 'Toplevel')
         if self.node is not None:
             self.node.attach(ctx, d, self)
-        if 'structure' in d:
-            ctx.run('structure', self.structure.visit, d['structure'])
 
-    @reify
-    def structure(self):
-        return runtime.resolve_visitor('structure', cls=ComplexStructure, logger=logger)
+        runtime.run_properties(ctx, d, visitor_mapping=self._properties_visitor_mapping)

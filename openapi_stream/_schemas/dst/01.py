@@ -40,6 +40,16 @@ class Person(Visitor):
     _links = ['name']
 
     @reify
+    def name(self):
+        return runtime.resolve_visitor('name', cls=Name, logger=logger)
+
+    @reify
+    def _properties_visitor_mapping(self):
+        return {
+            'name': self.name,
+        }
+
+    @reify
     def node(self):
         return runtime.resolve_node('.nodes.Person', here=__name__, logger=logger)
 
@@ -50,12 +60,8 @@ class Person(Visitor):
         logger.debug("visit: %s", 'Person')
         if self.node is not None:
             self.node.attach(ctx, d, self)
-        if 'name' in d:
-            ctx.run('name', self.name.visit, d['name'])
 
-    @reify
-    def name(self):
-        return runtime.resolve_visitor('name', cls=Name, logger=logger)
+        runtime.run_properties(ctx, d, visitor_mapping=self._properties_visitor_mapping)
 
 
 
@@ -65,6 +71,16 @@ class Toplevel(Visitor):
     _uid = '/examples/01ref.yaml#/'
     _properties = ['father']
     _links = ['father']
+
+    @reify
+    def father(self):
+        return runtime.resolve_visitor('father', cls=Person, logger=logger)
+
+    @reify
+    def _properties_visitor_mapping(self):
+        return {
+            'father': self.father,
+        }
 
     @reify
     def node(self):
@@ -77,9 +93,5 @@ class Toplevel(Visitor):
         logger.debug("visit: %s", 'Toplevel')
         if self.node is not None:
             self.node.attach(ctx, d, self)
-        if 'father' in d:
-            ctx.run('father', self.father.visit, d['father'])
 
-    @reify
-    def father(self):
-        return runtime.resolve_visitor('father', cls=Person, logger=logger)
+        runtime.run_properties(ctx, d, visitor_mapping=self._properties_visitor_mapping)

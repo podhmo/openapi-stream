@@ -94,6 +94,16 @@ class Toplevel(Visitor):
     _links = ['value']
 
     @reify
+    def value(self):
+        return runtime.resolve_visitor('value', cls=Value, logger=logger)
+
+    @reify
+    def _properties_visitor_mapping(self):
+        return {
+            'value': self.value,
+        }
+
+    @reify
     def node(self):
         return runtime.resolve_node('.nodes.Toplevel', here=__name__, logger=logger)
 
@@ -104,12 +114,8 @@ class Toplevel(Visitor):
         logger.debug("visit: %s", 'Toplevel')
         if self.node is not None:
             self.node.attach(ctx, d, self)
-        if 'value' in d:
-            ctx.run('value', self.value.visit, d['value'])
 
-    @reify
-    def value(self):
-        return runtime.resolve_visitor('value', cls=Value, logger=logger)
+        runtime.run_properties(ctx, d, visitor_mapping=self._properties_visitor_mapping)
 
 
 

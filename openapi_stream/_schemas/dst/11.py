@@ -22,7 +22,7 @@ class Toplevel(Visitor):
     _extra_properties = ['additionalProperties', 'patternProperties']
 
     @reify
-    def _pattern_properties_regexes(self):
+    def _pattern_properties_visitor_pairs(self):
         return [
             (re.compile('^x-'), runtime.resolve_visitor('^x-', cls=Toplevel._PatternPropertiesx0xx1, logger=logger)),
         ]
@@ -39,13 +39,13 @@ class Toplevel(Visitor):
         if self.node is not None:
             self.node.attach(ctx, d, self)
 
-        runtime.run_pattern_properties(ctx, d, self._pattern_properties_regexes)
+        runtime.run_pattern_properties(ctx, d, self._pattern_properties_visitor_pairs)
 
         # additionalProperties
         for k, v in d.items():
             if k in self._properties:
                 continue
-            for rx, visitor in self._pattern_properties_regexes:
+            for rx, visitor in self._pattern_properties_visitor_pairs:
                 m = rx.search(rx)
                 if m is not None:
                     continue

@@ -42,6 +42,14 @@ class Schema(Visitor):
     _links = ['patternProperties', 'properties', 'additionalProperties']
 
     @reify
+    def _properties_visitor_mapping(self):
+        return {
+            'patternProperties': self.patternProperties,
+            'properties': self.properties,
+            'additionalProperties': self.additionalProperties,
+        }
+
+    @reify
     def node(self):
         return runtime.resolve_node('.nodes.Schema', here=__name__, logger=logger)
 
@@ -52,12 +60,8 @@ class Schema(Visitor):
         logger.debug("visit: %s", 'Schema')
         if self.node is not None:
             self.node.attach(ctx, d, self)
-        if 'patternProperties' in d:
-            ctx.run('patternProperties', self.patternProperties.visit, d['patternProperties'])
-        if 'properties' in d:
-            ctx.run('properties', self.properties.visit, d['properties'])
-        if 'additionalProperties' in d:
-            ctx.run('additionalProperties', self.additionalProperties.visit, d['additionalProperties'])
+
+        runtime.run_properties(ctx, d, visitor_mapping=self._properties_visitor_mapping)
 
     # anonymous definition for 'properties' (TODO: nodename)
     class _Properties(Visitor):
@@ -67,7 +71,7 @@ class Schema(Visitor):
         _extra_properties = ['patternProperties']
 
         @reify
-        def _pattern_properties_regexes(self):
+        def _pattern_properties_visitor_pairs(self):
             return [
                 (re.compile('^[a-zA-Z0-9\\.\\-_]+$'), runtime.resolve_visitor('^[a-zA-Z0-9\\.\\-_]+$', cls=Schema._Properties._PatternPropertiesx1ax2zAx2Z0x29x3X4, logger=logger)),
             ]
@@ -84,7 +88,7 @@ class Schema(Visitor):
             if self.node is not None:
                 self.node.attach(ctx, d, self)
 
-            runtime.run_pattern_properties(ctx, d, self._pattern_properties_regexes)
+            runtime.run_pattern_properties(ctx, d, self._pattern_properties_visitor_pairs)
 
         # anonymous definition for 'patternProperties/^[a-zA-Z0-9\\.\\-_]+$' (TODO: nodename)
         class _PatternPropertiesx1ax2zAx2Z0x29x3X4(Visitor):
@@ -271,6 +275,13 @@ class Toplevel(Visitor):
     _links = ['definitions', 'properties']
 
     @reify
+    def _properties_visitor_mapping(self):
+        return {
+            'definitions': self.definitions,
+            'properties': self.properties,
+        }
+
+    @reify
     def node(self):
         return runtime.resolve_node('.nodes.Toplevel', here=__name__, logger=logger)
 
@@ -281,10 +292,8 @@ class Toplevel(Visitor):
         logger.debug("visit: %s", 'Toplevel')
         if self.node is not None:
             self.node.attach(ctx, d, self)
-        if 'definitions' in d:
-            ctx.run('definitions', self.definitions.visit, d['definitions'])
-        if 'properties' in d:
-            ctx.run('properties', self.properties.visit, d['properties'])
+
+        runtime.run_properties(ctx, d, visitor_mapping=self._properties_visitor_mapping)
 
     # anonymous definition for 'properties' (TODO: nodename)
     class _Properties(Visitor):
@@ -294,7 +303,7 @@ class Toplevel(Visitor):
         _extra_properties = ['patternProperties']
 
         @reify
-        def _pattern_properties_regexes(self):
+        def _pattern_properties_visitor_pairs(self):
             return [
                 (re.compile('^[a-zA-Z0-9\\.\\-_]+$'), runtime.resolve_visitor('^[a-zA-Z0-9\\.\\-_]+$', cls=Toplevel._Properties._PatternPropertiesx1ax2zAx2Z0x29x3X4, logger=logger)),
             ]
@@ -311,7 +320,7 @@ class Toplevel(Visitor):
             if self.node is not None:
                 self.node.attach(ctx, d, self)
 
-            runtime.run_pattern_properties(ctx, d, self._pattern_properties_regexes)
+            runtime.run_pattern_properties(ctx, d, self._pattern_properties_visitor_pairs)
 
         # anonymous definition for 'patternProperties/^[a-zA-Z0-9\\.\\-_]+$' (TODO: nodename)
         class _PatternPropertiesx1ax2zAx2Z0x29x3X4(Visitor):
@@ -363,7 +372,7 @@ class Toplevel(Visitor):
         _extra_properties = ['patternProperties']
 
         @reify
-        def _pattern_properties_regexes(self):
+        def _pattern_properties_visitor_pairs(self):
             return [
                 (re.compile('^[a-zA-Z0-9\\.\\-_]+$'), runtime.resolve_visitor('^[a-zA-Z0-9\\.\\-_]+$', cls=Schema, logger=logger)),
             ]
@@ -380,7 +389,7 @@ class Toplevel(Visitor):
             if self.node is not None:
                 self.node.attach(ctx, d, self)
 
-            runtime.run_pattern_properties(ctx, d, self._pattern_properties_regexes)
+            runtime.run_pattern_properties(ctx, d, self._pattern_properties_visitor_pairs)
 
 
     @reify

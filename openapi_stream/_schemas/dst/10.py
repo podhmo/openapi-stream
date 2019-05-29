@@ -42,6 +42,12 @@ class Schema(Visitor):
     _links = ['not']
 
     @reify
+    def _properties_visitor_mapping(self):
+        return {
+            'not': self.not_,
+        }
+
+    @reify
     def node(self):
         return runtime.resolve_node('.nodes.Schema', here=__name__, logger=logger)
 
@@ -52,8 +58,8 @@ class Schema(Visitor):
         logger.debug("visit: %s", 'Schema')
         if self.node is not None:
             self.node.attach(ctx, d, self)
-        if 'not' in d:
-            ctx.run('not', self.not_.visit, d['not'])
+
+        runtime.run_properties(ctx, d, visitor_mapping=self._properties_visitor_mapping)
 
         # additionalProperties
         for k, v in d.items():
@@ -109,6 +115,16 @@ class Toplevel(Visitor):
     _links = ['schema']
 
     @reify
+    def schema(self):
+        return runtime.resolve_visitor('schema', cls=Schema, logger=logger)
+
+    @reify
+    def _properties_visitor_mapping(self):
+        return {
+            'schema': self.schema,
+        }
+
+    @reify
     def node(self):
         return runtime.resolve_node('.nodes.Toplevel', here=__name__, logger=logger)
 
@@ -119,18 +135,14 @@ class Toplevel(Visitor):
         logger.debug("visit: %s", 'Toplevel')
         if self.node is not None:
             self.node.attach(ctx, d, self)
-        if 'schema' in d:
-            ctx.run('schema', self.schema.visit, d['schema'])
+
+        runtime.run_properties(ctx, d, visitor_mapping=self._properties_visitor_mapping)
 
         # additionalProperties
         for k, v in d.items():
             if k in self._properties:
                 continue
             logger.warning('unexpected property is found: %r, where=%s', k, self.__class__.__name__)
-
-    @reify
-    def schema(self):
-        return runtime.resolve_visitor('schema', cls=Schema, logger=logger)
 
 
 
