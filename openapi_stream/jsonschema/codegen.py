@@ -1,4 +1,5 @@
 import typing as t
+import sys
 import re
 import json
 import logging
@@ -85,28 +86,47 @@ class Helper:
 
 class NameManager:  # todo: rename
     def __init__(self, *, helper: Helper):
-        self.visitors = {}
+        self.visitor_class_names: t.Dict[str, t.Tuple[str, str]] = {}
         self.helper = helper
 
-    def register_visitor_name(self, ev: Event, clsname):
-        self.visitors[ev.uid] = clsname
+    def iterate_clssname_and_prefix_pairs(self) -> t.Iterator[t.Tuple[str, str]]:
+        return self.visitor_class_names.items()
+
+    def add_visitor_name(self, ev: Event, clsname, prefix: str = ""):
+        self.visitor_class_names[ev.uid] = (clsname, prefix)
 
     def __contains__(self, uid: str) -> bool:
-        return uid in self.visitors
+        return uid in self.visitor_class_names
 
     def create_lazy_visitor_name(self, uid: str) -> _LazyName:
+        assert uid is not None
+
         def to_str(uid: str = uid):
-            # name = self.visitors[uid]
-            name = self.visitors.get(uid)
+            # name = self.visitor_class_names[uid]
+            name, prefix = (self.visitor_class_names.get(uid) or (None, ""))
             if name is None:
-                logger.warn("missing, resolve clasname: %s -> %s", uid, name)
+                logger.warning("missing, resolve clasname: %s -> %s", uid, name)
                 name = "<missing>"
             else:
                 name = self.helper.methodname(name)
+                if prefix:
+                    name = prefix + name
                 logger.debug("resolve clasname: %s -> %s", uid, name)
             return name
 
         return _LazyName(to_str)
+
+
+class CaseDefinitionsManager:
+    def __init__(self) -> None:
+        self.definitions = {}  # all xxx_of definitions
+
+    def add_definitions(self, defs: dict) -> None:
+        self.definitions.update(defs)
+
+    @property
+    def has_definitions(self) -> bool:
+        return bool(self.definitions)
 
 
 class Emitter:  # todo: rename
@@ -146,16 +166,18 @@ class Generator:
         self.helper = Helper()
         self.name_manager = NameManager(helper=self.helper)
 
+        self.case_definitions_manager = CaseDefinitionsManager()
+
         # xxx:
         self._end_of_private_visit_method_conts = {}  # classname -> m.submodule()
         self._end_of_class_definition_conts = {}  # classname -> m.submodule()
 
     def generate_class(
-        self, ev: Event, *, m=None, clsname: str = None, prefix: str = None
+        self, ev: Event, *, m=None, clsname: str = None, prefix: str = ""
     ) -> None:
         m = m or self.m
         clsname = clsname or self.helper.classname(ev)
-        self.name_manager.register_visitor_name(ev, clsname)
+        self.name_manager.add_visitor_name(ev, clsname, prefix=prefix)
 
         m.import_area.from_("openapi_stream.interfaces", "Visitor")
         with m.class_(clsname, "Visitor"):
@@ -164,7 +186,7 @@ class Generator:
             if self.helper.has_pattern_properties(ev):
                 self._gen_pattern_properties_regexes(ev, m=m)
 
-            self._gen_node_property(ev, clsname=clsname, m=m)
+            self._gen_node_property(ev, m=m)
             self._gen_visit_method(ev, m=m)
             self._gen_visit_private_method(ev, clsname=clsname, m=m)
 
@@ -225,13 +247,14 @@ class Generator:
                     )
             m.stmt("]")
 
-    def _gen_node_property(self, ev: Event, *, clsname, m) -> None:
+    def _gen_node_property(self, ev: Event, *, m) -> None:
+        lazy_name = self.name_manager.create_lazy_visitor_name(ev.uid)
         m.import_area.from_("openapi_stream", "runtime")
         m.stmt("@reify")
         with m.def_("node", "self"):
             m.stmt(
-                "return runtime.resolve_node({path!r}, here=__name__, logger=logger)",
-                path=f".nodes.{clsname}",
+                "return runtime.resolve_node('.nodes.{cls}', here=__name__, logger=logger)",
+                cls=lazy_name,
             )
 
     def _gen_visit_method(self, ev: Event, *, m) -> None:
@@ -243,20 +266,15 @@ class Generator:
                 m.return_("self._visit(ctx, d)  # todo: simplify")
             elif names.roles.combine_type in ev.roles:
                 expanded = ev.get_annotated(names.annotations.expanded)
-                links = list(self.helper.iterate_xxx_of_links(ev))
                 bodies = {k: v for k, v in expanded.items() if k != "definitions"}
                 m.stmt("# for {} (xxx: _case is module global)", ev.name)
 
                 if ev.name == names.types.oneOf:
                     for i, prop in enumerate(bodies[ev.name]):
                         with m.if_(f"_case.when(d, {prop['$ref']!r})"):
-                            if self.helper.is_link_of_anonymous_definition(links[i]):
-                                m.stmt("return  # not supported yet")
-                                continue  # xxx
-                            else:
-                                m.stmt(
-                                    f"return ctx.run(None, self.{ev.name}{i!r}.visit, d)"
-                                )
+                            m.stmt(
+                                f"return ctx.run(None, self.{ev.name}{i!r}.visit, d)"
+                            )
                     m.stmt(
                         "raise ValueError('unexpected value')  # todo gentle message"
                     )
@@ -264,13 +282,8 @@ class Generator:
                     m.stmt("matched = False")
                     for i, prop in enumerate(bodies[ev.name]):
                         with m.if_(f"_case.when(d, {prop['$ref']!r})"):
-
-                            if self.helper.is_link_of_anonymous_definition(links[i]):
-                                m.stmt("pass  # not supported yet")
-                                continue  # xxx
-                            else:
-                                m.stmt("matched = True")
-                                m.stmt(f"ctx.run(None, self.{ev.name}{i!r}.visit, d)")
+                            m.stmt("matched = True")
+                            m.stmt(f"ctx.run(None, self.{ev.name}{i!r}.visit, d)")
                     with m.if_("not matched"):
                         m.stmt(
                             "raise ValueError('unexpected value')  # todo gentle message"
@@ -281,11 +294,7 @@ class Generator:
                             m.stmt(
                                 "raise ValueError('unexpected value')  # todo gentle message"
                             )
-                        if self.helper.is_link_of_anonymous_definition(links[i]):
-                            m.stmt("pass  # not supported yet")
-                            continue  # xxx
-                        else:
-                            m.stmt(f"ctx.run(None, self.{ev.name}{i!r}.visit, d)")
+                        m.stmt(f"ctx.run(None, self.{ev.name}{i!r}.visit, d)")
             else:
                 m.return_("self._visit(ctx, d)  # todo: remove this code")
 
@@ -353,18 +362,15 @@ class Generator:
                 ev.uid,
             ] = self.helper.create_submodule(m)
 
-    def _gen_visitor_property(
-        self, ev: Event, *, name: str, uid: str, m, prefix: str = ""
-    ) -> None:
+    def _gen_visitor_property(self, ev: Event, *, name: str, uid: str, m) -> None:
         m.import_area.from_("openapi_stream", "runtime")
         m.stmt("@reify")
         with m.def_(self.helper.methodname(name), "self"):
             lazy_link_name = self.name_manager.create_lazy_visitor_name(uid)
             m.stmt(
-                "return runtime.resolve_visitor({name!r}, cls={prefix}{cls}, logger=logger)",
+                "return runtime.resolve_visitor({name!r}, cls={cls}, logger=logger)",
                 name=name,
                 cls=lazy_link_name,
-                prefix=prefix,
             )
 
     def _gen_properties_visitors(self, ev: Event, *, m) -> None:
@@ -376,6 +382,9 @@ class Generator:
     def _gen_xxx_of_visitors(self, ev: Event, *, m) -> None:
         for i, uid in self.helper.iterate_xxx_of_links(ev):
             name = f"{ev.name}{i}"
+            prefix = ""
+            if self.helper.is_link_of_anonymous_definition(uid):
+                uid = f"{ev.uid}/{ev.name}/{i}"
             self._gen_visitor_property(ev, name=name, uid=uid, m=m)
 
 
@@ -388,7 +397,6 @@ def main():
     m.sep()
 
     g = Generator(m)
-    definitions = {}
     toplevels: t.List[Event] = []
 
     stream: t.Iterable[Event] = main(create_visitor=ToplevelVisitor)
@@ -400,7 +408,7 @@ def main():
                 continue
 
             if names.roles.has_expanded in ev.roles:
-                definitions.update(
+                g.case_definitions_manager.add_definitions(
                     ev.get_annotated(names.annotations.expanded)["definitions"]
                 )
             if names.roles.has_name in ev.roles:
@@ -417,15 +425,16 @@ def main():
             if (
                 ev.name in (names.types.object, names.types.array)
                 or names.roles.combine_type in ev.roles
+                or names.roles.child_of_xxx_of in ev.roles
             ):
                 uid_and_clsname_pairs = sorted(
-                    g.name_manager.visitors.items(),
+                    g.name_manager.iterate_clssname_and_prefix_pairs(),
                     key=lambda pair: len(pair[0]),
                     reverse=True,
                 )
 
                 uid = ev.uid
-                for parent_uid, parent_clsname in uid_and_clsname_pairs:
+                for parent_uid, (parent_clsname, prefix) in uid_and_clsname_pairs:
                     if uid.startswith(parent_uid):
                         classdef_sm = g._end_of_class_definition_conts[parent_uid]
                         fieldname = uid.replace(parent_uid, "").lstrip("/")
@@ -438,24 +447,19 @@ def main():
                             ev,
                             clsname=clsname,
                             m=classdef_sm,
-                            prefix=f"{parent_clsname}.",
+                            prefix=f"{prefix}{parent_clsname}.",
                         )
 
                         # ok: properties
+                        # ok:  oneOf, anyof, allof
                         # todo: additionalProperties, patternProperties
-                        # todo:  oneOf, anyof, allof
                         # assert "/" not in fieldname
                         name = fieldname
-                        g._gen_visitor_property(
-                            ev,
-                            name=name,
-                            uid=uid,
-                            prefix=f"{parent_clsname}.",
-                            m=classdef_sm,
-                        )
+                        g._gen_visitor_property(ev, name=name, uid=uid, m=classdef_sm)
                         break
                 else:
                     raise RuntimeError(f"unexpected type: {ev.name}")
+
         return delayed_stream
 
     delayed_stream = consume_stream(stream, is_delayed=False)
@@ -474,10 +478,11 @@ def main():
     m.import_area.from_("openapi_stream.context", "Context")
 
     delayed_stream = sorted(delayed_stream, key=lambda ev: len(ev.uid))
-    consume_stream(delayed_stream, is_delayed=True)
+    delayed_stream = consume_stream(delayed_stream, is_delayed=True)
 
-    if definitions:
-        data = {"definitions": definitions}
+    if g.case_definitions_manager.has_definitions:
+        data = {"definitions": g.case_definitions_manager.definitions}
+        m.import_area.from_("openapi_stream", "runtime")
         g.emitter.emit_data(m, "_case = runtime.Case({})", data, nofmt=True)
 
     print(m)

@@ -43,7 +43,7 @@ class ComplexStructure(Visitor):
 
         @reify
         def node(self):
-            return runtime.resolve_node('.nodes._Person', here=__name__, logger=logger)
+            return runtime.resolve_node('.nodes.ComplexStructure._Person', here=__name__, logger=logger)
 
         def visit(self, ctx: Context, d: dict):
             return self._visit(ctx, d)  # todo: remove this code

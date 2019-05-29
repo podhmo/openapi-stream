@@ -1,0 +1,18 @@
+definitions:
+  positiveInt:
+    type: integer
+    minimum: 0
+  structure:
+    type: object
+    properties:
+      xof:
+        oneOf:
+          - type: bool
+          - type: object
+            properties:
+              value:
+                type: integer
+          - $ref: "#/definitions/positiveInt"
+properties:
+  structure:
+    $ref: "#/definitions/structure"

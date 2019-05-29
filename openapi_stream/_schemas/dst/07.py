@@ -43,7 +43,7 @@ class ComplexStructure(Visitor):
 
         @reify
         def node(self):
-            return runtime.resolve_node('.nodes._People', here=__name__, logger=logger)
+            return runtime.resolve_node('.nodes.ComplexStructure._People', here=__name__, logger=logger)
 
         def visit(self, ctx: Context, d: dict):
             return [self._visit(ctx, x) for x in d]
@@ -62,7 +62,7 @@ class ComplexStructure(Visitor):
 
             @reify
             def node(self):
-                return runtime.resolve_node('.nodes._Items', here=__name__, logger=logger)
+                return runtime.resolve_node('.nodes.ComplexStructure._People._Items', here=__name__, logger=logger)
 
             def visit(self, ctx: Context, d: dict):
                 return self._visit(ctx, d)  # todo: remove this code
@@ -75,7 +75,7 @@ class ComplexStructure(Visitor):
 
         @reify
         def items(self):
-            return runtime.resolve_visitor('items', cls=_People._Items, logger=logger)
+            return runtime.resolve_visitor('items', cls=ComplexStructure._People._Items, logger=logger)
 
 
     @reify

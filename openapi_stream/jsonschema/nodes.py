@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 
 _primitive_types = set(["string", "integer", "float", "boolean", "number"])
 _combine_types = set(["oneOf", "anyOf", "allof", "not"])
+_combine_types_without_not_type = set(["oneOf", "anyOf", "allof"])
 _object_attributes = set(["properties", "additionalProperties", "patternProperties"])
 _object_extra_attributes = set(["additionalProperties", "patternProperties"])
 _array_attributes = set(["items"])
@@ -204,7 +205,8 @@ class SchemaNode(Node):
         elif len(ctx.path) > 2:
             if ctx.path[-2] in _object_attributes or ctx.path[-1] in _object_attributes:
                 roles.append(names.roles.field_of_something)
-
+            if ctx.path[-2] in _combine_types_without_not_type:
+                roles.append(names.roles.child_of_xxx_of)
         if typename == names.types.array:
             seen = False
             for x in _array_attributes:
@@ -227,7 +229,7 @@ class SchemaNode(Node):
             roles.append(names.roles.combine_type)
             expanded = self.expander.expand(ctx, d)
             links = []
-            for k in ["oneOf", "allOf", "anyOf"]:
+            for k in _combine_types_without_not_type:
                 if k in d:
                     for i, prop in enumerate(d[k]):
                         if _has_ref(prop):
@@ -262,7 +264,10 @@ class SchemaNode(Node):
             for name, prop in d["properties"].items():
                 if _has_ref(prop):
                     links.append((name, ctx.get_uid(prop["$ref"])))
-                elif hasattr(prop, "get") and prop.get("type", "object") in ("array", "object"):
+                elif hasattr(prop, "get") and prop.get("type", "object") in (
+                    "array",
+                    "object",
+                ):
                     links.append((name, None))
             if links:
                 annotations[names.annotations.links] = links
@@ -283,4 +288,5 @@ class SchemaNode(Node):
         if expanded:
             roles.append(names.roles.has_expanded)
             annotations[names.annotations.expanded] = MiniReprDict(expanded)
+
         ctx.emit(d, name=typename, roles=roles, annotations=annotations)

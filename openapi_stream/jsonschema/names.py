@@ -24,6 +24,7 @@ class roles:  # todo: rename to roles?
     combine_type = "combine_type"  # oneOf,allOf,anyOf
 
     field_of_something = "field_of_something"
+    child_of_xxx_of = "child_of_xxx_of"
     toplevel_properties = "toplevel_properties"
 
     has_name = "has_name"  # #/definitions/<name>
