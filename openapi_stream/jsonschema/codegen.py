@@ -36,15 +36,20 @@ class _LazyName:
 class _PythonNameNormalizer:
     def __init__(self):
         self.unpython_name_map = defaultdict(lambda: f"x{len(self.unpython_name_map)}")
-        self.unpython_rx = re.compile(r"^\d+|[^a-zA-Z0-9_]+")
+        self.unpython_rx = re.compile(r"^(?P<number>\d)+|(?P<unpython>[^a-zA-Z0-9_]+)")
 
     def __call__(self, name):
         if self.unpython_rx.search(name) is not None:
-            name = self.unpython_rx.sub(self._replace, name)
+            name = self.unpython_rx.sub(self._replace, name).rstrip("_")
+        if keyword.iskeyword(name):
+            name = name + "_"
         return name
 
     def _replace(self, match: re.Match):
-        return self.unpython_name_map[match.group()]
+        md = match.groupdict()
+        if md["number"] is not None:
+            return "n{md['number']}"
+        return "_"
 
 
 class Helper:
@@ -53,11 +58,9 @@ class Helper:
 
     def classname(self, ev: Event, *, name: str = None) -> str:
         retname = name or ev.get_annotated(names.annotations.name)
-        return pascalcase(self.to_python_name(retname))
+        return self.to_python_name(pascalcase(retname))
 
     def methodname(self, name: str) -> str:
-        if keyword.iskeyword(name):
-            name = name + "_"
         return self.to_python_name(name)
 
     def create_submodule(self, m) -> Module:

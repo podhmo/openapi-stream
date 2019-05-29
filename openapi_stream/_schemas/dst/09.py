@@ -24,7 +24,7 @@ class Schema(Visitor):
     @reify
     def _pattern_properties_regexes(self):
         return [
-            (re.compile('^x-'), runtime.resolve_visitor('^x-', cls=Schema._PatternPropertiesx0xx1, logger=logger)),
+            (re.compile('^x-'), runtime.resolve_visitor('^x-', cls=Schema._PatternProperties_x, logger=logger)),
         ]
 
     @reify
@@ -57,27 +57,27 @@ class Schema(Visitor):
             logger.warning('unexpected property is found: %r, where=%s', k, self.__class__.__name__)
 
     # anonymous definition for 'patternProperties/^x-' (TODO: nodename)
-    class _PatternPropertiesx0xx1(Visitor):
+    class _PatternProperties_x(Visitor):
         _schema_type = 'any'
         _roles = ['field_of_something']
         _uid = '/examples/09anonymous_pattern-properties.yaml#/definitions/Schema/patternProperties/^x-'
 
         @reify
         def node(self):
-            return runtime.resolve_node('.nodes.Schema._PatternPropertiesx0xx1', here=__name__, logger=logger)
+            return runtime.resolve_node('.nodes.Schema._PatternProperties_x', here=__name__, logger=logger)
 
         def visit(self, ctx: Context, d: dict):
             return self._visit(ctx, d)  # todo: remove this code
 
         def _visit(self, ctx: Context, d: dict):
-            logger.debug("visit: %s", '_PatternPropertiesx0xx1')
+            logger.debug("visit: %s", '_PatternProperties_x')
             if self.node is not None:
                 self.node.attach(ctx, d, self)
 
 
     @reify
-    def patternPropertiesx0xx1(self):
-        return runtime.resolve_visitor('patternProperties/^x-', cls=Schema._PatternPropertiesx0xx1, logger=logger)
+    def patternProperties_x(self):
+        return runtime.resolve_visitor('patternProperties/^x-', cls=Schema._PatternProperties_x, logger=logger)
 
 
 

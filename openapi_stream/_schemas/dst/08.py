@@ -81,41 +81,41 @@ class Structure(Visitor):
 
         @reify
         def oneOf0(self):
-            return runtime.resolve_visitor('oneOf0', cls=Structure._Xof._OneOfx00, logger=logger)
+            return runtime.resolve_visitor('oneOf0', cls=Structure._Xof._OneOf_0, logger=logger)
 
         @reify
         def oneOf1(self):
-            return runtime.resolve_visitor('oneOf1', cls=Structure._Xof._OneOfx01, logger=logger)
+            return runtime.resolve_visitor('oneOf1', cls=Structure._Xof._OneOf_1, logger=logger)
 
         @reify
         def oneOf2(self):
             return runtime.resolve_visitor('oneOf2', cls=PositiveInt, logger=logger)
 
         # anonymous definition for 'oneOf/0' (TODO: nodename)
-        class _OneOfx00(Visitor):
+        class _OneOf_0(Visitor):
             _schema_type = 'unknown'
             _roles = ['child_of_xxx_of']
             _uid = '/examples/08anonymous_one-of.yaml#/definitions/structure/xof/oneOf/0'
 
             @reify
             def node(self):
-                return runtime.resolve_node('.nodes.Structure._Xof._OneOfx00', here=__name__, logger=logger)
+                return runtime.resolve_node('.nodes.Structure._Xof._OneOf_0', here=__name__, logger=logger)
 
             def visit(self, ctx: Context, d: dict):
                 return self._visit(ctx, d)  # todo: remove this code
 
             def _visit(self, ctx: Context, d: dict):
-                logger.debug("visit: %s", '_OneOfx00')
+                logger.debug("visit: %s", '_OneOf_0')
                 if self.node is not None:
                     self.node.attach(ctx, d, self)
 
 
         @reify
-        def oneOfx00(self):
-            return runtime.resolve_visitor('oneOf/0', cls=Structure._Xof._OneOfx00, logger=logger)
+        def oneOf_0(self):
+            return runtime.resolve_visitor('oneOf/0', cls=Structure._Xof._OneOf_0, logger=logger)
 
         # anonymous definition for 'oneOf/1' (TODO: nodename)
-        class _OneOfx01(Visitor):
+        class _OneOf_1(Visitor):
             _schema_type = 'object'
             _roles = ['child_of_xxx_of', 'has_properties']
             _uid = '/examples/08anonymous_one-of.yaml#/definitions/structure/xof/oneOf/1'
@@ -123,20 +123,20 @@ class Structure(Visitor):
 
             @reify
             def node(self):
-                return runtime.resolve_node('.nodes.Structure._Xof._OneOfx01', here=__name__, logger=logger)
+                return runtime.resolve_node('.nodes.Structure._Xof._OneOf_1', here=__name__, logger=logger)
 
             def visit(self, ctx: Context, d: dict):
                 return self._visit(ctx, d)  # todo: remove this code
 
             def _visit(self, ctx: Context, d: dict):
-                logger.debug("visit: %s", '_OneOfx01')
+                logger.debug("visit: %s", '_OneOf_1')
                 if self.node is not None:
                     self.node.attach(ctx, d, self)
 
 
         @reify
-        def oneOfx01(self):
-            return runtime.resolve_visitor('oneOf/1', cls=Structure._Xof._OneOfx01, logger=logger)
+        def oneOf_1(self):
+            return runtime.resolve_visitor('oneOf/1', cls=Structure._Xof._OneOf_1, logger=logger)
 
 
     @reify
