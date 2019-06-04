@@ -1,0 +1,60 @@
+openapi: "3.0.0"
+tags:
+  - name: person
+    description: operation for person
+info:
+  version: 1.0.0
+  title: people api
+  description: first examples
+  contact:
+    name: me
+    email: me@example.net
+    url: http://example.net
+servers:
+  - url: http://localhost:8080/api
+
+paths:
+  /people:
+    get:
+      description: list
+      operationId: listPeople
+      tags:
+        - person
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Person"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    Person:
+      type: object
+      properties:
+        name:
+          type: string
+        age:
+          type: integer
+      required:
+        - name
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string

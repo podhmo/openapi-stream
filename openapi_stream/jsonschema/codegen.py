@@ -325,7 +325,7 @@ class Generator:
                 m.stmt("# patternProperties")
                 with m.for_("rx, visitor in self._pattern_properties_regexes"):
                     with m.for_("k, v in d.items()"):
-                        m.stmt("m = rx.search(rx)")
+                        m.stmt("m = rx.search(k)")
                         with m.if_("m is not None and visitor is not None"):
                             m.stmt("ctx.run(k, visitor.visit, v)")
             if self.helper.has_additional_properties(ev):
