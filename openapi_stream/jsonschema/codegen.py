@@ -282,7 +282,7 @@ class Generator:
                                 f"return ctx.run(None, self.{ev.name}{i!r}.visit, d)"
                             )
                     m.stmt(
-                        "raise runtime.MismatchError(ctx, 'unexpected value')  # todo gentle message"
+                        "raise runtime.MismatchError('unexpected value', ctx=ctx, visitor=self)  # todo gentle message"
                     )
                 elif ev.name == names.types.anyOf:
                     m.stmt("matched = False")
@@ -292,13 +292,13 @@ class Generator:
                             m.stmt(f"ctx.run(None, self.{ev.name}{i!r}.visit, d)")
                     with m.if_("not matched"):
                         m.stmt(
-                            "raise runtime.MismatchError(ctx, 'unexpected value')  # todo gentle message"
+                            "raise runtime.MismatchError('unexpected value', ctx=ctx, visitor=self)  # todo gentle message"
                         )
                 elif ev.name == names.types.allOf:
                     for i, prop in enumerate(bodies[ev.name]):
                         with m.if_(f"not _case.when(d, {prop['$ref']!r})"):
                             m.stmt(
-                                "raise runtime.MismatchError(ctx, 'unexpected value')  # todo gentle message"
+                                "raise runtime.MismatchError('unexpected value', ctx=ctx, visitor=self)  # todo gentle message"
                             )
                         m.stmt(f"ctx.run(None, self.{ev.name}{i!r}.visit, d)")
             else:
