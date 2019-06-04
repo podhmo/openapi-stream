@@ -3,19 +3,18 @@ TARGET ?= data/people.yaml
 # TARGET ?= data/petstore.yaml
 
 run: visitors.py ${TARGET}
-	python main.py ${TARGET}
+	python main.py --log=DEBUG ${TARGET}
 validate: node_modules/.bin/speccy
 	$^ lint -v ${TARGET}
 
 node_modules/.bin/speccy:
 	npm install speccy
 
-gen: visitors.py fetch
-fetch: data/openapi-3.0.json data/petstore.yaml
-
-visitors.py: data/openapi-3.0.json
-	${CMD} $^ | tee $@
+gen: data/openapi-3.0.json fetch
+	${CMD} $< | tee visitors.py
 	black *.py
+
+fetch: data/openapi-3.0.json data/petstore.yaml
 
 data/openapi-3.0.json:
 	wget https://github.com/wework/speccy/raw/master/schemas/openapi-3.0.json -O $@
