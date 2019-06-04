@@ -1087,7 +1087,7 @@ class Schema(Visitor):
                 return ctx.run(None, self.oneOf0.visit, d)
             if _case.when(d, "#/definitions/3"):
                 return ctx.run(None, self.oneOf1.visit, d)
-            raise ValueError("unexpected value")  # todo gentle message
+            raise runtime.MismatchError(ctx, "unexpected value")  # todo gentle message
 
         def _visit(self, ctx: Context, d: dict):
             logger.debug("visit: %s", "_Not")
@@ -1174,7 +1174,9 @@ class Schema(Visitor):
                     return ctx.run(None, self.oneOf0.visit, d)
                 if _case.when(d, "#/definitions/3"):
                     return ctx.run(None, self.oneOf1.visit, d)
-                raise ValueError("unexpected value")  # todo gentle message
+                raise runtime.MismatchError(
+                    ctx, "unexpected value"
+                )  # todo gentle message
 
             def _visit(self, ctx: Context, d: dict):
                 logger.debug("visit: %s", "_Items")
@@ -1242,7 +1244,9 @@ class Schema(Visitor):
                     return ctx.run(None, self.oneOf0.visit, d)
                 if _case.when(d, "#/definitions/3"):
                     return ctx.run(None, self.oneOf1.visit, d)
-                raise ValueError("unexpected value")  # todo gentle message
+                raise runtime.MismatchError(
+                    ctx, "unexpected value"
+                )  # todo gentle message
 
             def _visit(self, ctx: Context, d: dict):
                 logger.debug("visit: %s", "_Items")
@@ -1310,7 +1314,9 @@ class Schema(Visitor):
                     return ctx.run(None, self.oneOf0.visit, d)
                 if _case.when(d, "#/definitions/3"):
                     return ctx.run(None, self.oneOf1.visit, d)
-                raise ValueError("unexpected value")  # todo gentle message
+                raise runtime.MismatchError(
+                    ctx, "unexpected value"
+                )  # todo gentle message
 
             def _visit(self, ctx: Context, d: dict):
                 logger.debug("visit: %s", "_Items")
@@ -1354,7 +1360,7 @@ class Schema(Visitor):
                 return ctx.run(None, self.oneOf0.visit, d)
             if _case.when(d, "#/definitions/3"):
                 return ctx.run(None, self.oneOf1.visit, d)
-            raise ValueError("unexpected value")  # todo gentle message
+            raise runtime.MismatchError(ctx, "unexpected value")  # todo gentle message
 
         def _visit(self, ctx: Context, d: dict):
             logger.debug("visit: %s", "_Items")
@@ -1449,7 +1455,9 @@ class Schema(Visitor):
                     return ctx.run(None, self.oneOf0.visit, d)
                 if _case.when(d, "#/definitions/3"):
                     return ctx.run(None, self.oneOf1.visit, d)
-                raise ValueError("unexpected value")  # todo gentle message
+                raise runtime.MismatchError(
+                    ctx, "unexpected value"
+                )  # todo gentle message
 
             def _visit(self, ctx: Context, d: dict):
                 logger.debug("visit: %s", "_AdditionalProperties")
@@ -1503,7 +1511,7 @@ class Schema(Visitor):
                 return ctx.run(None, self.oneOf1.visit, d)
             if _case.when(d, "#/definitions/34"):
                 return ctx.run(None, self.oneOf2.visit, d)
-            raise ValueError("unexpected value")  # todo gentle message
+            raise runtime.MismatchError(ctx, "unexpected value")  # todo gentle message
 
         def _visit(self, ctx: Context, d: dict):
             logger.debug("visit: %s", "_AdditionalProperties")
@@ -1676,7 +1684,7 @@ class ParameterWithSchemaWithExampleInPath(Visitor):
                 return ctx.run(None, self.oneOf0.visit, d)
             if _case.when(d, "#/definitions/3"):
                 return ctx.run(None, self.oneOf1.visit, d)
-            raise ValueError("unexpected value")  # todo gentle message
+            raise runtime.MismatchError(ctx, "unexpected value")  # todo gentle message
 
         def _visit(self, ctx: Context, d: dict):
             logger.debug("visit: %s", "_Schema")
@@ -1819,7 +1827,7 @@ class ParameterWithSchemaWithExampleInQuery(Visitor):
                 return ctx.run(None, self.oneOf0.visit, d)
             if _case.when(d, "#/definitions/3"):
                 return ctx.run(None, self.oneOf1.visit, d)
-            raise ValueError("unexpected value")  # todo gentle message
+            raise runtime.MismatchError(ctx, "unexpected value")  # todo gentle message
 
         def _visit(self, ctx: Context, d: dict):
             logger.debug("visit: %s", "_Schema")
@@ -1964,7 +1972,7 @@ class ParameterWithSchemaWithExampleInHeader(Visitor):
                 return ctx.run(None, self.oneOf0.visit, d)
             if _case.when(d, "#/definitions/3"):
                 return ctx.run(None, self.oneOf1.visit, d)
-            raise ValueError("unexpected value")  # todo gentle message
+            raise runtime.MismatchError(ctx, "unexpected value")  # todo gentle message
 
         def _visit(self, ctx: Context, d: dict):
             logger.debug("visit: %s", "_Schema")
@@ -2109,7 +2117,7 @@ class ParameterWithSchemaWithExampleInCookie(Visitor):
                 return ctx.run(None, self.oneOf0.visit, d)
             if _case.when(d, "#/definitions/3"):
                 return ctx.run(None, self.oneOf1.visit, d)
-            raise ValueError("unexpected value")  # todo gentle message
+            raise runtime.MismatchError(ctx, "unexpected value")  # todo gentle message
 
         def _visit(self, ctx: Context, d: dict):
             logger.debug("visit: %s", "_Schema")
@@ -2188,7 +2196,7 @@ class ParameterWithSchemaWithExample(Visitor):
             return ctx.run(None, self.oneOf2.visit, d)
         if _case.when(d, "#/definitions/46"):
             return ctx.run(None, self.oneOf3.visit, d)
-        raise ValueError("unexpected value")  # todo gentle message
+        raise runtime.MismatchError(ctx, "unexpected value")  # todo gentle message
 
     def _visit(self, ctx: Context, d: dict):
         logger.debug("visit: %s", "ParameterWithSchemaWithExample")
@@ -2390,7 +2398,7 @@ class ParameterWithSchemaWithExamplesInPath(Visitor):
                 return ctx.run(None, self.oneOf0.visit, d)
             if _case.when(d, "#/definitions/3"):
                 return ctx.run(None, self.oneOf1.visit, d)
-            raise ValueError("unexpected value")  # todo gentle message
+            raise runtime.MismatchError(ctx, "unexpected value")  # todo gentle message
 
         def _visit(self, ctx: Context, d: dict):
             logger.debug("visit: %s", "_Schema")
@@ -2464,7 +2472,9 @@ class ParameterWithSchemaWithExamplesInPath(Visitor):
                     return ctx.run(None, self.oneOf0.visit, d)
                 if _case.when(d, "#/definitions/3"):
                     return ctx.run(None, self.oneOf1.visit, d)
-                raise ValueError("unexpected value")  # todo gentle message
+                raise runtime.MismatchError(
+                    ctx, "unexpected value"
+                )  # todo gentle message
 
             def _visit(self, ctx: Context, d: dict):
                 logger.debug("visit: %s", "_AdditionalProperties")
@@ -2619,7 +2629,7 @@ class ParameterWithSchemaWithExamplesInQuery(Visitor):
                 return ctx.run(None, self.oneOf0.visit, d)
             if _case.when(d, "#/definitions/3"):
                 return ctx.run(None, self.oneOf1.visit, d)
-            raise ValueError("unexpected value")  # todo gentle message
+            raise runtime.MismatchError(ctx, "unexpected value")  # todo gentle message
 
         def _visit(self, ctx: Context, d: dict):
             logger.debug("visit: %s", "_Schema")
@@ -2693,7 +2703,9 @@ class ParameterWithSchemaWithExamplesInQuery(Visitor):
                     return ctx.run(None, self.oneOf0.visit, d)
                 if _case.when(d, "#/definitions/3"):
                     return ctx.run(None, self.oneOf1.visit, d)
-                raise ValueError("unexpected value")  # todo gentle message
+                raise runtime.MismatchError(
+                    ctx, "unexpected value"
+                )  # todo gentle message
 
             def _visit(self, ctx: Context, d: dict):
                 logger.debug("visit: %s", "_AdditionalProperties")
@@ -2848,7 +2860,7 @@ class ParameterWithSchemaWithExamplesInHeader(Visitor):
                 return ctx.run(None, self.oneOf0.visit, d)
             if _case.when(d, "#/definitions/3"):
                 return ctx.run(None, self.oneOf1.visit, d)
-            raise ValueError("unexpected value")  # todo gentle message
+            raise runtime.MismatchError(ctx, "unexpected value")  # todo gentle message
 
         def _visit(self, ctx: Context, d: dict):
             logger.debug("visit: %s", "_Schema")
@@ -2922,7 +2934,9 @@ class ParameterWithSchemaWithExamplesInHeader(Visitor):
                     return ctx.run(None, self.oneOf0.visit, d)
                 if _case.when(d, "#/definitions/3"):
                     return ctx.run(None, self.oneOf1.visit, d)
-                raise ValueError("unexpected value")  # todo gentle message
+                raise runtime.MismatchError(
+                    ctx, "unexpected value"
+                )  # todo gentle message
 
             def _visit(self, ctx: Context, d: dict):
                 logger.debug("visit: %s", "_AdditionalProperties")
@@ -3077,7 +3091,7 @@ class ParameterWithSchemaWithExamplesInCookie(Visitor):
                 return ctx.run(None, self.oneOf0.visit, d)
             if _case.when(d, "#/definitions/3"):
                 return ctx.run(None, self.oneOf1.visit, d)
-            raise ValueError("unexpected value")  # todo gentle message
+            raise runtime.MismatchError(ctx, "unexpected value")  # todo gentle message
 
         def _visit(self, ctx: Context, d: dict):
             logger.debug("visit: %s", "_Schema")
@@ -3151,7 +3165,9 @@ class ParameterWithSchemaWithExamplesInCookie(Visitor):
                     return ctx.run(None, self.oneOf0.visit, d)
                 if _case.when(d, "#/definitions/3"):
                     return ctx.run(None, self.oneOf1.visit, d)
-                raise ValueError("unexpected value")  # todo gentle message
+                raise runtime.MismatchError(
+                    ctx, "unexpected value"
+                )  # todo gentle message
 
             def _visit(self, ctx: Context, d: dict):
                 logger.debug("visit: %s", "_AdditionalProperties")
@@ -3240,7 +3256,7 @@ class ParameterWithSchemaWithExamples(Visitor):
             return ctx.run(None, self.oneOf2.visit, d)
         if _case.when(d, "#/definitions/46"):
             return ctx.run(None, self.oneOf3.visit, d)
-        raise ValueError("unexpected value")  # todo gentle message
+        raise runtime.MismatchError(ctx, "unexpected value")  # todo gentle message
 
     def _visit(self, ctx: Context, d: dict):
         logger.debug("visit: %s", "ParameterWithSchemaWithExamples")
@@ -3290,7 +3306,7 @@ class ParameterWithSchema(Visitor):
             return ctx.run(None, self.oneOf0.visit, d)
         if _case.when(d, "#/definitions/3"):
             return ctx.run(None, self.oneOf1.visit, d)
-        raise ValueError("unexpected value")  # todo gentle message
+        raise runtime.MismatchError(ctx, "unexpected value")  # todo gentle message
 
     def _visit(self, ctx: Context, d: dict):
         logger.debug("visit: %s", "ParameterWithSchema")
@@ -3399,7 +3415,7 @@ class HeaderWithSchemaWithExample(Visitor):
                 return ctx.run(None, self.oneOf0.visit, d)
             if _case.when(d, "#/definitions/3"):
                 return ctx.run(None, self.oneOf1.visit, d)
-            raise ValueError("unexpected value")  # todo gentle message
+            raise runtime.MismatchError(ctx, "unexpected value")  # todo gentle message
 
         def _visit(self, ctx: Context, d: dict):
             logger.debug("visit: %s", "_Schema")
@@ -3540,7 +3556,7 @@ class HeaderWithSchemaWithExamples(Visitor):
                 return ctx.run(None, self.oneOf0.visit, d)
             if _case.when(d, "#/definitions/3"):
                 return ctx.run(None, self.oneOf1.visit, d)
-            raise ValueError("unexpected value")  # todo gentle message
+            raise runtime.MismatchError(ctx, "unexpected value")  # todo gentle message
 
         def _visit(self, ctx: Context, d: dict):
             logger.debug("visit: %s", "_Schema")
@@ -3616,7 +3632,9 @@ class HeaderWithSchemaWithExamples(Visitor):
                     return ctx.run(None, self.oneOf0.visit, d)
                 if _case.when(d, "#/definitions/3"):
                     return ctx.run(None, self.oneOf1.visit, d)
-                raise ValueError("unexpected value")  # todo gentle message
+                raise runtime.MismatchError(
+                    ctx, "unexpected value"
+                )  # todo gentle message
 
             def _visit(self, ctx: Context, d: dict):
                 logger.debug("visit: %s", "_AdditionalProperties")
@@ -3694,7 +3712,7 @@ class HeaderWithSchema(Visitor):
             return ctx.run(None, self.oneOf0.visit, d)
         if _case.when(d, "#/definitions/3"):
             return ctx.run(None, self.oneOf1.visit, d)
-        raise ValueError("unexpected value")  # todo gentle message
+        raise runtime.MismatchError(ctx, "unexpected value")  # todo gentle message
 
     def _visit(self, ctx: Context, d: dict):
         logger.debug("visit: %s", "HeaderWithSchema")
@@ -3854,7 +3872,7 @@ class Header(Visitor):
             return ctx.run(None, self.oneOf0.visit, d)
         if _case.when(d, "#/definitions/3"):
             return ctx.run(None, self.oneOf1.visit, d)
-        raise ValueError("unexpected value")  # todo gentle message
+        raise runtime.MismatchError(ctx, "unexpected value")  # todo gentle message
 
     def _visit(self, ctx: Context, d: dict):
         logger.debug("visit: %s", "Header")
@@ -4009,7 +4027,7 @@ class MediaTypeWithExample(Visitor):
                 return ctx.run(None, self.oneOf0.visit, d)
             if _case.when(d, "#/definitions/3"):
                 return ctx.run(None, self.oneOf1.visit, d)
-            raise ValueError("unexpected value")  # todo gentle message
+            raise runtime.MismatchError(ctx, "unexpected value")  # todo gentle message
 
         def _visit(self, ctx: Context, d: dict):
             logger.debug("visit: %s", "_Schema")
@@ -4171,7 +4189,7 @@ class MediaTypeWithExamples(Visitor):
                 return ctx.run(None, self.oneOf0.visit, d)
             if _case.when(d, "#/definitions/3"):
                 return ctx.run(None, self.oneOf1.visit, d)
-            raise ValueError("unexpected value")  # todo gentle message
+            raise runtime.MismatchError(ctx, "unexpected value")  # todo gentle message
 
         def _visit(self, ctx: Context, d: dict):
             logger.debug("visit: %s", "_Schema")
@@ -4243,7 +4261,9 @@ class MediaTypeWithExamples(Visitor):
                     return ctx.run(None, self.oneOf0.visit, d)
                 if _case.when(d, "#/definitions/3"):
                     return ctx.run(None, self.oneOf1.visit, d)
-                raise ValueError("unexpected value")  # todo gentle message
+                raise runtime.MismatchError(
+                    ctx, "unexpected value"
+                )  # todo gentle message
 
             def _visit(self, ctx: Context, d: dict):
                 logger.debug("visit: %s", "_AdditionalProperties")
@@ -4352,7 +4372,7 @@ class MediaType(Visitor):
             return ctx.run(None, self.oneOf0.visit, d)
         if _case.when(d, "#/definitions/3"):
             return ctx.run(None, self.oneOf1.visit, d)
-        raise ValueError("unexpected value")  # todo gentle message
+        raise runtime.MismatchError(ctx, "unexpected value")  # todo gentle message
 
     def _visit(self, ctx: Context, d: dict):
         logger.debug("visit: %s", "MediaType")
@@ -4652,7 +4672,7 @@ class ParameterWithContent(Visitor):
             return ctx.run(None, self.oneOf0.visit, d)
         if _case.when(d, "#/definitions/3"):
             return ctx.run(None, self.oneOf1.visit, d)
-        raise ValueError("unexpected value")  # todo gentle message
+        raise runtime.MismatchError(ctx, "unexpected value")  # todo gentle message
 
     def _visit(self, ctx: Context, d: dict):
         logger.debug("visit: %s", "ParameterWithContent")
@@ -4688,7 +4708,7 @@ class Parameter(Visitor):
             return ctx.run(None, self.oneOf0.visit, d)
         if _case.when(d, "#/definitions/3"):
             return ctx.run(None, self.oneOf1.visit, d)
-        raise ValueError("unexpected value")  # todo gentle message
+        raise runtime.MismatchError(ctx, "unexpected value")  # todo gentle message
 
     def _visit(self, ctx: Context, d: dict):
         logger.debug("visit: %s", "Parameter")
@@ -5146,7 +5166,7 @@ class Link(Visitor):
             return ctx.run(None, self.oneOf0.visit, d)
         if _case.when(d, "#/definitions/3"):
             return ctx.run(None, self.oneOf1.visit, d)
-        raise ValueError("unexpected value")  # todo gentle message
+        raise runtime.MismatchError(ctx, "unexpected value")  # todo gentle message
 
     def _visit(self, ctx: Context, d: dict):
         logger.debug("visit: %s", "Link")
@@ -5271,7 +5291,9 @@ class Response(Visitor):
                     return ctx.run(None, self.oneOf0.visit, d)
                 if _case.when(d, "#/definitions/3"):
                     return ctx.run(None, self.oneOf1.visit, d)
-                raise ValueError("unexpected value")  # todo gentle message
+                raise runtime.MismatchError(
+                    ctx, "unexpected value"
+                )  # todo gentle message
 
             def _visit(self, ctx: Context, d: dict):
                 logger.debug("visit: %s", "_AdditionalProperties")
@@ -5349,7 +5371,9 @@ class Response(Visitor):
                     return ctx.run(None, self.oneOf0.visit, d)
                 if _case.when(d, "#/definitions/3"):
                     return ctx.run(None, self.oneOf1.visit, d)
-                raise ValueError("unexpected value")  # todo gentle message
+                raise runtime.MismatchError(
+                    ctx, "unexpected value"
+                )  # todo gentle message
 
             def _visit(self, ctx: Context, d: dict):
                 logger.debug("visit: %s", "_AdditionalProperties")
@@ -5513,7 +5537,7 @@ class Responses(Visitor):
                 return ctx.run(None, self.oneOf0.visit, d)
             if _case.when(d, "#/definitions/3"):
                 return ctx.run(None, self.oneOf1.visit, d)
-            raise ValueError("unexpected value")  # todo gentle message
+            raise runtime.MismatchError(ctx, "unexpected value")  # todo gentle message
 
         def _visit(self, ctx: Context, d: dict):
             logger.debug("visit: %s", "_Default")
@@ -5579,7 +5603,7 @@ class Responses(Visitor):
                 return ctx.run(None, self.oneOf0.visit, d)
             if _case.when(d, "#/definitions/3"):
                 return ctx.run(None, self.oneOf1.visit, d)
-            raise ValueError("unexpected value")  # todo gentle message
+            raise runtime.MismatchError(ctx, "unexpected value")  # todo gentle message
 
         def _visit(self, ctx: Context, d: dict):
             logger.debug("visit: %s", "_PatternProperties_15_d_2_XX")
@@ -5902,7 +5926,9 @@ class Operation(Visitor):
                     return ctx.run(None, self.oneOf0.visit, d)
                 if _case.when(d, "#/definitions/3"):
                     return ctx.run(None, self.oneOf1.visit, d)
-                raise ValueError("unexpected value")  # todo gentle message
+                raise runtime.MismatchError(
+                    ctx, "unexpected value"
+                )  # todo gentle message
 
             def _visit(self, ctx: Context, d: dict):
                 logger.debug("visit: %s", "_AdditionalProperties")
@@ -5974,7 +6000,9 @@ class Operation(Visitor):
                     return ctx.run(None, self.oneOf0.visit, d)
                 if _case.when(d, "#/definitions/3"):
                     return ctx.run(None, self.oneOf1.visit, d)
-                raise ValueError("unexpected value")  # todo gentle message
+                raise runtime.MismatchError(
+                    ctx, "unexpected value"
+                )  # todo gentle message
 
             def _visit(self, ctx: Context, d: dict):
                 logger.debug("visit: %s", "_Items")
@@ -6020,7 +6048,7 @@ class Operation(Visitor):
                 return ctx.run(None, self.oneOf0.visit, d)
             if _case.when(d, "#/definitions/3"):
                 return ctx.run(None, self.oneOf1.visit, d)
-            raise ValueError("unexpected value")  # todo gentle message
+            raise runtime.MismatchError(ctx, "unexpected value")  # todo gentle message
 
         def _visit(self, ctx: Context, d: dict):
             logger.debug("visit: %s", "_RequestBody")
@@ -6263,7 +6291,9 @@ class PathItem(Visitor):
                     return ctx.run(None, self.oneOf0.visit, d)
                 if _case.when(d, "#/definitions/3"):
                     return ctx.run(None, self.oneOf1.visit, d)
-                raise ValueError("unexpected value")  # todo gentle message
+                raise runtime.MismatchError(
+                    ctx, "unexpected value"
+                )  # todo gentle message
 
             def _visit(self, ctx: Context, d: dict):
                 logger.debug("visit: %s", "_Items")
@@ -6664,7 +6694,7 @@ class HTTPSecurityScheme(Visitor):
             return ctx.run(None, self.oneOf0.visit, d)
         if _case.when(d, "#/definitions/3"):
             return ctx.run(None, self.oneOf1.visit, d)
-        raise ValueError("unexpected value")  # todo gentle message
+        raise runtime.MismatchError(ctx, "unexpected value")  # todo gentle message
 
     def _visit(self, ctx: Context, d: dict):
         logger.debug("visit: %s", "HTTPSecurityScheme")
@@ -7593,7 +7623,7 @@ class SecurityScheme(Visitor):
             return ctx.run(None, self.oneOf2.visit, d)
         if _case.when(d, "#/definitions/46"):
             return ctx.run(None, self.oneOf3.visit, d)
-        raise ValueError("unexpected value")  # todo gentle message
+        raise runtime.MismatchError(ctx, "unexpected value")  # todo gentle message
 
     def _visit(self, ctx: Context, d: dict):
         logger.debug("visit: %s", "SecurityScheme")
@@ -7776,7 +7806,9 @@ class Components(Visitor):
                     return ctx.run(None, self.oneOf0.visit, d)
                 if _case.when(d, "#/definitions/3"):
                     return ctx.run(None, self.oneOf1.visit, d)
-                raise ValueError("unexpected value")  # todo gentle message
+                raise runtime.MismatchError(
+                    ctx, "unexpected value"
+                )  # todo gentle message
 
             def _visit(self, ctx: Context, d: dict):
                 logger.debug("visit: %s", "_PatternProperties_aZAZ09")
@@ -7868,7 +7900,9 @@ class Components(Visitor):
                     return ctx.run(None, self.oneOf0.visit, d)
                 if _case.when(d, "#/definitions/3"):
                     return ctx.run(None, self.oneOf1.visit, d)
-                raise ValueError("unexpected value")  # todo gentle message
+                raise runtime.MismatchError(
+                    ctx, "unexpected value"
+                )  # todo gentle message
 
             def _visit(self, ctx: Context, d: dict):
                 logger.debug("visit: %s", "_PatternProperties_aZAZ09")
@@ -7962,7 +7996,9 @@ class Components(Visitor):
                     return ctx.run(None, self.oneOf0.visit, d)
                 if _case.when(d, "#/definitions/3"):
                     return ctx.run(None, self.oneOf1.visit, d)
-                raise ValueError("unexpected value")  # todo gentle message
+                raise runtime.MismatchError(
+                    ctx, "unexpected value"
+                )  # todo gentle message
 
             def _visit(self, ctx: Context, d: dict):
                 logger.debug("visit: %s", "_PatternProperties_aZAZ09")
@@ -8056,7 +8092,9 @@ class Components(Visitor):
                     return ctx.run(None, self.oneOf0.visit, d)
                 if _case.when(d, "#/definitions/3"):
                     return ctx.run(None, self.oneOf1.visit, d)
-                raise ValueError("unexpected value")  # todo gentle message
+                raise runtime.MismatchError(
+                    ctx, "unexpected value"
+                )  # todo gentle message
 
             def _visit(self, ctx: Context, d: dict):
                 logger.debug("visit: %s", "_PatternProperties_aZAZ09")
@@ -8150,7 +8188,9 @@ class Components(Visitor):
                     return ctx.run(None, self.oneOf0.visit, d)
                 if _case.when(d, "#/definitions/3"):
                     return ctx.run(None, self.oneOf1.visit, d)
-                raise ValueError("unexpected value")  # todo gentle message
+                raise runtime.MismatchError(
+                    ctx, "unexpected value"
+                )  # todo gentle message
 
             def _visit(self, ctx: Context, d: dict):
                 logger.debug("visit: %s", "_PatternProperties_aZAZ09")
@@ -8244,7 +8284,9 @@ class Components(Visitor):
                     return ctx.run(None, self.oneOf0.visit, d)
                 if _case.when(d, "#/definitions/3"):
                     return ctx.run(None, self.oneOf1.visit, d)
-                raise ValueError("unexpected value")  # todo gentle message
+                raise runtime.MismatchError(
+                    ctx, "unexpected value"
+                )  # todo gentle message
 
             def _visit(self, ctx: Context, d: dict):
                 logger.debug("visit: %s", "_PatternProperties_aZAZ09")
@@ -8338,7 +8380,9 @@ class Components(Visitor):
                     return ctx.run(None, self.oneOf0.visit, d)
                 if _case.when(d, "#/definitions/3"):
                     return ctx.run(None, self.oneOf1.visit, d)
-                raise ValueError("unexpected value")  # todo gentle message
+                raise runtime.MismatchError(
+                    ctx, "unexpected value"
+                )  # todo gentle message
 
             def _visit(self, ctx: Context, d: dict):
                 logger.debug("visit: %s", "_PatternProperties_aZAZ09")
@@ -8432,7 +8476,9 @@ class Components(Visitor):
                     return ctx.run(None, self.oneOf0.visit, d)
                 if _case.when(d, "#/definitions/3"):
                     return ctx.run(None, self.oneOf1.visit, d)
-                raise ValueError("unexpected value")  # todo gentle message
+                raise runtime.MismatchError(
+                    ctx, "unexpected value"
+                )  # todo gentle message
 
             def _visit(self, ctx: Context, d: dict):
                 logger.debug("visit: %s", "_PatternProperties_aZAZ09")
@@ -8526,7 +8572,9 @@ class Components(Visitor):
                     return ctx.run(None, self.oneOf0.visit, d)
                 if _case.when(d, "#/definitions/3"):
                     return ctx.run(None, self.oneOf1.visit, d)
-                raise ValueError("unexpected value")  # todo gentle message
+                raise runtime.MismatchError(
+                    ctx, "unexpected value"
+                )  # todo gentle message
 
             def _visit(self, ctx: Context, d: dict):
                 logger.debug("visit: %s", "_PatternProperties_aZAZ09")
