@@ -15,12 +15,21 @@ class MismatchError(ValueError):
         super().__init__(
             "".join(
                 [
+                    f"\x1b[1m{msg}\x1b[0m",
                     "\n\n",
-                    self.description.visitor_source_file,
-                    "\n\n",
-                    *self.description.visitor_code_lines,
+                    "\x1b[1;4mpycode visit history\x1b[0m\n\n",
+                    *[
+                        "  " * i + x
+                        for i, x in enumerate(
+                            self.description.visit_function_history, 1
+                        )
+                    ],
                     "\n",
-                    self.description.oneline_message,
+                    "\x1b[1;4mpycode file: " + self.description.visitor_source_file,
+                    "\x1b[0m\n\n",
+                    *["  " + x for x in self.description.visitor_code_lines],
+                    "\n",
+                    f"\x1b[1m{self.description.oneline_description}\x1b[0m",
                 ]
             )
         )
