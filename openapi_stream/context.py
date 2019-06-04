@@ -27,6 +27,7 @@ class Context:
         self.resolvers = [resolver]
         self._emit = emit
         self.history = history or [[]]
+        self.fn_history = []
         self._seen = set()
 
     @property
@@ -64,16 +65,16 @@ class Context:
         return self.path.pop()
 
     def run(self, name, fn, *args, **kwargs):
-        if name is None:
-            return fn(self, *args, **kwargs)
-
         teardown = None
+        self.fn_history.append(fn)
         try:
-            teardown = self.push_name(name)
+            if name is not None:
+                teardown = self.push_name(name)
             return fn(self, *args, **kwargs)
         finally:
             if teardown is not None:
                 teardown()
+            self.fn_history.pop()
 
     def resolve_ref(self, ref, *, cont) -> None:
         sd, query, teardown = self._resolve(ref)
