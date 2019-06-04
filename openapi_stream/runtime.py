@@ -1,20 +1,29 @@
 import sys
 from importlib import import_module
-from dictknife.jsonknife import access_by_json_pointer, path_to_json_pointer
-from openapi_stream import Context
+from dictknife.jsonknife import access_by_json_pointer
+
+from . import Context
+from .interfaces import Visitor
+from .description import Description
 
 
 class MismatchError(ValueError):
-    def __init__(self, msg: str, *, ctx: Context, visitor=None) -> None:
-        ref = path_to_json_pointer(ctx.path)
+    description_factory = Description
+
+    def __init__(self, msg: str, *, ctx: Context, visitor: Visitor) -> None:
+        self.description = self.description_factory(msg, ctx=ctx, visitor=visitor)
         super().__init__(
-            f"{msg} (where ref={ref!r}, visitor={fullname_of_class(visitor.__class__)!r})"
+            "".join(
+                [
+                    "\n\n",
+                    self.description.visitor_source_file,
+                    "\n\n",
+                    *self.description.visitor_code_lines,
+                    "\n",
+                    self.description.oneline_message,
+                ]
+            )
         )
-        self.ctx = ctx
-
-
-def fullname_of_class(cls):
-    return f"{cls.__module__}.{cls.__name__}"
 
 
 def resolve_visitor(name, *, cls, logger):
