@@ -17,7 +17,7 @@ class MismatchError(ValueError):
                 [
                     f"\x1b[1m{msg}\x1b[0m",
                     "\n\n",
-                    "\x1b[1;4mpycode visit history\x1b[0m\n\n",
+                    "\x1b[1;4mpycode visit history:\x1b[0m\n\n",
                     *[
                         "  " * i + x
                         for i, x in enumerate(

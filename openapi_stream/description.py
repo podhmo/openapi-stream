@@ -36,10 +36,11 @@ class Description:
     @reify
     def visitor_source_file(self) -> str:
         fname = inspect.getfile(self.visitor.__class__)
-        # import os
-        # cwd = os.getcwd()
-        # if fname.startswith(cwd):
-        #     return fname[len(cwd) + 1 :]
+        import os
+
+        cwd = os.getcwd()
+        if fname.startswith(cwd):
+            return fname[len(cwd) + 1:]
         return fname
 
     @reify
